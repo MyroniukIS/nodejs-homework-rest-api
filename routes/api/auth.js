@@ -65,9 +65,10 @@ router.post("/login", async(req, res, next) => {
         }
 
         const token = jwt.sign(payload, SECRET_KEY, {expiresIn: "3h"});
+        await User.findByIdAndUpdate(user._id, {token});
 
         res.json({
-            token,
+            token: token,
             user: {
                 email,
                 subscription,
@@ -86,11 +87,9 @@ router.get("/current", authenticate, async(req, res, next) => {
 });
 
 router.get("/logout", authenticate, async(req, res, next) => {
-    try {
-        
-    } catch (error) {
-        
-    }
-})
+        const {_id} = req.user;
+        await User.findByIdAndUpdate(_id, {token: null});
+        res.status(204).send();
+});
 
 module.exports = router; 

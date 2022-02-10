@@ -1,10 +1,13 @@
 const express = require("express");
 const createError = require("http-errors");
 const bcrypt = require("bcryptjs");
+const jwt = require("jsonwebtoken");
 
 const {User, schemas} = require("../../models/users");
 
 const router = express.Router();
+
+const {SECRET_KEY} = process.env;
 
 router.post("/signup", async(req, res, next) => {
     try {
@@ -55,7 +58,12 @@ router.post("/login", async(req, res, next) => {
         }
         const {subscription} = user;
         
-        const token = "2345dtd5768.69869tff576r5i.87687rtfgfv78";
+        const payload = {
+            id: user._id
+        }
+
+        const token = jwt.sign(payload, SECRET_KEY, {expiresIn: "3h"});
+        
         res.json({
             token,
             user: {

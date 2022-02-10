@@ -13,7 +13,7 @@ const {
   updateStatusContact,
 } = require("../../controllers");
 
-router.get("/", getAllContacts);
+router.get("/", authenticate, getAllContacts);
 
 router.get("/:contactId", findContactById);
 

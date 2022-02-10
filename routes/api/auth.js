@@ -3,6 +3,8 @@ const createError = require("http-errors");
 const bcrypt = require("bcryptjs");
 const jwt = require("jsonwebtoken");
 
+const {authenticate} = require("../../middlewares");
+
 const {User, schemas} = require("../../models/users");
 
 const router = express.Router();
@@ -63,7 +65,7 @@ router.post("/login", async(req, res, next) => {
         }
 
         const token = jwt.sign(payload, SECRET_KEY, {expiresIn: "3h"});
-        
+
         res.json({
             token,
             user: {
@@ -75,5 +77,20 @@ router.post("/login", async(req, res, next) => {
         next(error)
     }
 });
+
+router.get("/current", authenticate, async(req, res, next) => {
+    res.json({
+        email: req.user.email,
+        subscription: req.user.subscription,
+    })
+});
+
+router.get("/logout", authenticate, async(req, res, next) => {
+    try {
+        
+    } catch (error) {
+        
+    }
+})
 
 module.exports = router; 

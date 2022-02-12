@@ -1,5 +1,7 @@
 const express = require("express");
 
+const {authenticate} = require("../../middlewares");
+
 const router = express.Router();
 
 const {
@@ -11,11 +13,11 @@ const {
   updateStatusContact,
 } = require("../../controllers");
 
-router.get("/", getAllContacts);
+router.get("/", authenticate, getAllContacts);
 
 router.get("/:contactId", findContactById);
 
-router.post("/", addContact);
+router.post("/", authenticate, addContact);
 
 router.put("/:contactId", changeContactById);
 

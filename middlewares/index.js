@@ -1,9 +1,9 @@
-const authenticate = require("./authenticate");
-const upload = require("./upload");
-const changingSizeAvatar = require("./changingSizeAvatar")
+const tokenVerify = require('./tokenVerify')
+const uploadAvatar = require('./uploadAvatar')
+const resizePhoto = require('./changeSizePhoto')
 
 module.exports = {
-    authenticate,
-    upload,
-    changingSizeAvatar
+    tokenVerify,
+    uploadAvatar,
+    resizePhoto
 };

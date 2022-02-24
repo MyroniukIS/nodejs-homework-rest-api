@@ -1,28 +1,28 @@
-const express = require("express");
-
-const {authenticate} = require("../../middlewares");
-
+const express = require('express');
 const router = express.Router();
+const {tokenVerify} = require("../../middlewares")
 
 const {
-  addContact,
-  changeContactById,
-  deleteContact,
-  findContactById,
-  getAllContacts,
-  updateStatusContact,
-} = require("../../controllers");
+  contacts: {
+    getAllContacts,
+    showContactById,
+    addNewContact,
+    deleteContact,
+    changeContact,
+    updateStatusContact
+  }
+} = require('../../controllers')
 
-router.get("/", authenticate, getAllContacts);
+router.get('/', tokenVerify, getAllContacts);
 
-router.get("/:contactId", findContactById);
+router.get('/:contactId', tokenVerify, showContactById);
 
-router.post("/", authenticate, addContact);
+router.post('/', tokenVerify, addNewContact);
 
-router.put("/:contactId", changeContactById);
+router.delete('/:contactId', tokenVerify, deleteContact);
 
-router.delete("/:contactId", deleteContact);
+router.put('/:contactId', tokenVerify, changeContact);
 
-router.patch("/:contactId/favorite", updateStatusContact);
+router.patch('/:contactId/favorite', tokenVerify, updateStatusContact);
 
 module.exports = router;

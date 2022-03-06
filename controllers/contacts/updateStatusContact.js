@@ -1,24 +1,19 @@
-const createError = require("http-errors");
-
-const { Contact, favoriteScheme } = require("../../models/contacts");
+const CreateError = require('http-errors');
+const { contact: { Contact, favoriteJoiSchema } } = require('../../models')
 
 const updateStatusContact = async (req, res, next) => {
-  try {
-    const { error } = favoriteScheme.validate(req.body);
-    if (error) {
-      throw new createError(400, (error.message = "missing field favorite"));
-    }
-    const { contactId } = req.params;
-    const result = await Contact.findByIdAndUpdate(contactId, req.body, {
-      new: true,
-    });
-    if (!result) {
-      throw new createError(404, "Not Found");
-    }
-    res.json(result);
-  } catch (error) {
-    next(error);
-  }
+    const { contactId } = req.params
+    const {_id} = req.user
+    try {
+        const { error } = favoriteJoiSchema.validate(req.body);
+        if (error) throw new CreateError(400, error.message = "missing field favorite");
+        const { favorite } = req.body
+        const result = await Contact.findOneAndUpdate({$and: [{_id: contactId}, {owner: _id}]}, { favorite }, { new: true });
+        if (!result) throw new CreateError(404, 'Not found');
+        res.json(result);
+    } catch (error) {
+        next(error);
+    };
 };
 
 module.exports = updateStatusContact;

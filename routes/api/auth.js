@@ -1,24 +1,28 @@
-const express = require("express");
-const {authenticate, upload} = require("../../middlewares");
-
-const router = express.Router();
+const express = require('express')
+const router = express.Router()
+const {tokenVerify, uploadAvatar} = require("../../middlewares")
 
 const {
-    signup,
-    login,
-    currentUser,
-    logout,
-    avatars
-  } = require("../../controllers/users");
+    auth: {
+        register, 
+        login,
+        currentUser,
+        logout,
+        subscriptions,
+        avatar,
+        tokenVerification,
+        emailVerify
+    }
+} = require('../../controllers');
 
-router.post("/signup", signup);
 
-router.post("/login", login);
+router.post('/signup', register);
+router.post('/login', login)
+router.get('/current', tokenVerify, currentUser)
+router.get('/logout', tokenVerify, logout)
+router.patch('/', tokenVerify, subscriptions)
+router.patch('/avatars', tokenVerify, uploadAvatar.single('avatar'), avatar)
+router.get('/verify/:verificationToken', tokenVerification);
+router.post('/verify', emailVerify);
 
-router.get("/current", authenticate, currentUser);
-
-router.get("/logout", authenticate, logout);
-
-router.patch("/avatars", authenticate, upload.single("avatar"), avatars);
-
-module.exports = router; 
+module.exports = router;
